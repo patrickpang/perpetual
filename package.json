@@ -11,9 +11,13 @@
     "react-emotion": "^9.2.8",
     "react-scripts": "1.1.5"
   },
+  "devDependencies": {
+    "workbox-cli": "^3.4.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && cp build/index.html build/200.html && workbox generateSW workbox-config.js && surge build/ --domain https://perpetual.surge.sh",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
