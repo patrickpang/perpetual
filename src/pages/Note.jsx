@@ -1,9 +1,74 @@
-import React from 'react'
+import React, { Component, createRef } from 'react'
 import { css } from 'react-emotion'
 import { bottomBarStyle } from '../helpers/layout'
 import Row from '../components/Row'
 import Icon from '../components/Icon'
 import themes from '../helpers/theme'
+import Input from '../components/Input'
+
+const blocks = [
+  {
+    id: 1,
+    content: 'HKU',
+    children: [
+      {
+        id: 2,
+        content: 'CS',
+        children: [
+          { id: 4, content: 'COMP3230', children: [] },
+          { id: 5, content: 'COMP3278', children: [] },
+          { id: 6, content: 'COMP3117', children: [] },
+          { id: 7, content: 'COMP3297', children: [] },
+        ],
+      },
+      { id: 3, content: 'BBA', children: [{ id: 6, content: 'MKTG2501', children: [] }] },
+    ],
+  },
+]
+
+class Outliner extends Component {
+  render() {
+    const { blocks } = this.props
+    return (
+      <div>
+        {blocks.map(block => (
+          <div
+            key={block.id}
+            className={css`
+              margin: 16px 0 0 16px;
+            `}
+          >
+            <Block block={block} />
+            {block.children.length > 0 && <Outliner blocks={block.children} />}
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+class Block extends Component {
+  state = { editing: false }
+
+  render() {
+    const { id, content } = this.props.block
+    const { editing } = this.state
+
+    return (
+      <div onClick={() => this.setState({ editing: true })}>
+        {editing ? (
+          <Input
+            value={content}
+            onBlur={() => this.setState({ editing: false })}
+            autoFocus={true}
+          />
+        ) : (
+          <div>{content}</div>
+        )}
+      </div>
+    )
+  }
+}
 
 const Note = ({ id }) => (
   <div>
@@ -14,37 +79,16 @@ const Note = ({ id }) => (
         padding: 32px;
       `}
     >
-      <input
-        type="text"
-        autoFocus={true}
-        placeholder="what's on your mind?"
-        className={css`
-          outline: none;
-          border: none;
-          width: 100%;
-          box-sizing: border-box;
-          background: none;
-          color: inherit;
-
-          &::placeholder {
-            color: inherit;
-          }
-        `}
-      />
+      <Input type="text" autoFocus={true} placeholder="what's on your mind?" />
     </div>
-    <textarea
-      placeholder="write down some more details"
-      className={css`
-        outline: none;
-        border: none;
-        resize: none;
-        padding: 32px;
-        width: 100%;
-        box-sizing: border-box;
 
-        height: 70vh;
+    <div
+      className={css`
+        padding: 16px;
       `}
-    />
+    >
+      <Outliner blocks={blocks} />
+    </div>
 
     <Actions />
   </div>
