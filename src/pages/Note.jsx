@@ -1,10 +1,19 @@
 import React from 'react'
 import { css } from 'react-emotion'
-import Main from '../components/Main'
+import { bottomBarStyle } from '../helpers/layout'
+import Row from '../components/Row'
+import Icon from '../components/Icon'
+import themes from '../helpers/theme'
 
 const Note = ({ id }) => (
-  <Main>
-    <div>
+  <div>
+    <div
+      className={css`
+        background: linear-gradient(45deg, ${themes['green'].join(',')});
+        color: white;
+        padding: 32px;
+      `}
+    >
       <input
         type="text"
         autoFocus={true}
@@ -12,9 +21,14 @@ const Note = ({ id }) => (
         className={css`
           outline: none;
           border: none;
-          padding: 16px;
           width: 100%;
           box-sizing: border-box;
+          background: none;
+          color: inherit;
+
+          &::placeholder {
+            color: inherit;
+          }
         `}
       />
     </div>
@@ -24,12 +38,31 @@ const Note = ({ id }) => (
         outline: none;
         border: none;
         resize: none;
-        padding: 16px;
+        padding: 32px;
         width: 100%;
         box-sizing: border-box;
+
+        height: 70vh;
       `}
     />
-  </Main>
+
+    <Actions />
+  </div>
+)
+
+const Actions = () => (
+  <div className={bottomBarStyle}>
+    <Row>
+      <div
+        className={css`
+          flex: 1;
+        `}
+      >
+        <Icon>delete</Icon>
+      </div>
+      <Icon>offline_pin</Icon>
+    </Row>
+  </div>
 )
 
 export default Note

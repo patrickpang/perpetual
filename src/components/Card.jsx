@@ -1,8 +1,9 @@
 import React from 'react'
 import { css } from 'react-emotion'
+import themes from '../helpers/theme'
 
-const cardStyle = css`
-  background: linear-gradient(45deg, #00b09b, #96c93d);
+const cardStyle = theme => css`
+  background: linear-gradient(45deg, ${themes[theme].join(',')});
   color: white;
 
   border-radius: 12px;
@@ -10,8 +11,8 @@ const cardStyle = css`
   padding: 24px;
 `
 
-const Card = ({ card: { id, title, content }, className }) => (
-  <div className={className ? cardStyle + ' ' + className : cardStyle}>
+const Card = ({ card: { id, title, content, theme }, className }) => (
+  <div className={className ? cardStyle(theme) + ' ' + className : cardStyle(theme)}>
     <b>{title}</b>
     <p>{content}</p>
   </div>

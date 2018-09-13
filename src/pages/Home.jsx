@@ -6,6 +6,7 @@ import Main from '../components/Main'
 import Icon from '../components/Icon'
 import Row from '../components/Row'
 import { Link } from '@reach/router'
+import { bottomBarStyle } from '../helpers/layout'
 
 const views = ['#everyday']
 
@@ -13,18 +14,21 @@ const cards = [
   {
     id: 1,
     title: 'emotion',
+    theme: 'green',
     content:
       'Emotion is a performant and flexible CSS-in-JS library. Building on many other CSS-in-JS libraries, it allows you to style apps quickly with string or object styles. ',
   },
   {
     id: 2,
     title: 'pouchdb',
+    theme: 'splendid',
     content:
       'PouchDB is an open-source JavaScript database inspired by Apache CouchDB that is designed to run well within the browser. ',
   },
   {
     id: 3,
     title: 'react',
+    theme: 'fresh',
     content:
       'A JavaScript library for building user interfaces. Declarative. Component-Based. Learn Once, Write Anywhere.',
   },
@@ -79,20 +83,7 @@ const CardsRow = ({ cards }) => (
 )
 
 const Actions = () => (
-  <Link
-    to="/note"
-    className={css`
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: white;
-      color: grey;
-      padding: 16px 32px;
-      cursor: pointer;
-      color: inherit;
-      text-decoration: none;
-    `}
-  >
+  <Link to="/note" className={bottomBarStyle}>
     <Row>
       <Icon>add</Icon>
       <div
