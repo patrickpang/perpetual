@@ -2,8 +2,9 @@ import React from 'react'
 import { css } from 'react-emotion'
 import Actions from '../components/Actions'
 import Card from '../components/Card'
-import Main from '../components/Main'
+import Layout from '../components/Layout'
 import Nav from '../components/Nav'
+import Main from '../components/Main'
 
 const views = ['#everyday']
 
@@ -32,8 +33,9 @@ const cards = [
 ]
 
 const Home = () => (
-  <div>
+  <Layout>
     <Nav />
+
     <Main>
       <div>
         <h2>Today</h2>
@@ -46,8 +48,9 @@ const Home = () => (
         </div>
       ))}
     </Main>
+
     <Actions />
-  </div>
+  </Layout>
 )
 
 const CardsRow = ({ cards }) => (

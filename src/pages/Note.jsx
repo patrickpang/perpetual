@@ -10,6 +10,8 @@ import { themes, randomTheme } from '../helpers/theme'
 import Input from '../components/Input'
 import { saveCard, getCard } from '../database/cards'
 import { db } from '../database/core'
+import Layout from '../components/Layout'
+import Main from '../components/Main'
 
 // https://codesandbox.io/s/k260nyxq9v
 
@@ -56,7 +58,7 @@ class Note extends Component {
     const { title, content, theme } = this.state
 
     return (
-      <div>
+      <Layout>
         <div
           onClick={this.changeTheme}
           className={css`
@@ -74,12 +76,14 @@ class Note extends Component {
           />
         </div>
 
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <BlocksList blocks={content} onContentChange={content => this.setState({ content })} />
-        </DragDropContext>
+        <Main>
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            <BlocksList blocks={content} onContentChange={content => this.setState({ content })} />
+          </DragDropContext>
+        </Main>
 
         <Actions />
-      </div>
+      </Layout>
     )
   }
 }
@@ -93,13 +97,7 @@ const BlocksList = ({ blocks, onContentChange }) => {
   return (
     <Droppable droppableId="blocks">
       {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-          className={css`
-            padding: 16px;
-          `}
-        >
+        <div ref={provided.innerRef} {...provided.droppableProps}>
           {blocks.map((block, index) => (
             <TextBlock
               key={block.id}
@@ -147,7 +145,7 @@ class TextBlock extends Component {
             {...provided.dragHandleProps}
             onClick={() => this.setState({ editing: true })}
             className={css`
-              padding: 16px;
+              padding: 16px 0;
             `}
           >
             {editing ? (
@@ -192,7 +190,7 @@ class NewBlock extends Component {
           onBlur={this.handleSubmit}
           placeholder="write it down"
           className={css`
-            padding: 16px;
+            padding: 16px 0;
 
             &::placeholder {
               color: grey;

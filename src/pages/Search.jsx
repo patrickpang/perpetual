@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { css } from 'react-emotion'
 import Actions from '../components/Actions'
 import Card from '../components/Card'
-import Main from '../components/Main'
+import Layout from '../components/Layout'
 import Nav from '../components/Nav'
 import { getCards } from '../database/cards'
 import { db } from '../database/core'
+import Main from '../components/Main'
 
 const CardsGrid = ({ cards }) => (
   <div
@@ -38,16 +39,16 @@ class Search extends Component {
   render() {
     const { cards } = this.state
     return (
-      <div>
+      <Layout>
         <Nav />
+
         <Main>
-          <div>
-            <h2>Search</h2>
-            <CardsGrid cards={cards} />
-          </div>
+          <h2>Search</h2>
+          <CardsGrid cards={cards} />
         </Main>
+
         <Actions />
-      </div>
+      </Layout>
     )
   }
 }
