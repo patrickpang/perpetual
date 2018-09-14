@@ -5,16 +5,17 @@
   "dependencies": {
     "@reach/router": "^1.1.1",
     "emotion": "^9.2.8",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "material-design-icons": "^3.0.1",
     "normalize.css": "^8.0.0",
-    "react": "^16.5.0",
-    "react-dom": "^16.5.0",
+    "react": "^16.5.1",
+    "react-beautiful-dnd": "^9.0.2",
+    "react-dom": "^16.5.1",
     "react-emotion": "^9.2.8",
     "react-scripts": "1.1.5"
   },
   "devDependencies": {
-    "workbox-cli": "^3.4.1"
+    "workbox-cli": "^3.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

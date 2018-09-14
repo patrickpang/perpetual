@@ -1,98 +1,117 @@
-import React, { Component, createRef } from 'react'
+import React, { Component } from 'react'
 import { css } from 'react-emotion'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 import { bottomBarStyle } from '../helpers/layout'
 import Row from '../components/Row'
 import Icon from '../components/Icon'
 import themes from '../helpers/theme'
 import Input from '../components/Input'
 
+// https://codesandbox.io/s/k260nyxq9v
+
 const blocks = [
-  {
-    id: 1,
-    content: 'HKU',
-    children: [
-      {
-        id: 2,
-        content: 'CS',
-        children: [
-          { id: 4, content: 'COMP3230', children: [] },
-          { id: 5, content: 'COMP3278', children: [] },
-          { id: 6, content: 'COMP3117', children: [] },
-          { id: 7, content: 'COMP3297', children: [] },
-        ],
-      },
-      { id: 3, content: 'BBA', children: [{ id: 6, content: 'MKTG2501', children: [] }] },
-    ],
-  },
+  { id: 4, type: 'text', content: 'COMP3230' },
+  { id: 5, type: 'text', content: 'COMP3278' },
+  { id: 6, type: 'text', content: 'COMP3117' },
+  { id: 7, type: 'text', content: 'COMP3297' },
+  { id: 8, type: 'text', content: 'MKTG2501' },
 ]
 
-class Outliner extends Component {
+class BlocksList extends Component {
   render() {
     const { blocks } = this.props
     return (
-      <div>
-        {blocks.map(block => (
+      <Droppable droppableId="blocks">
+        {(provided, snapshot) => (
           <div
-            key={block.id}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
             className={css`
-              margin: 16px 0 0 16px;
+              padding: 16px;
             `}
           >
-            <Block block={block} />
-            {block.children.length > 0 && <Outliner blocks={block.children} />}
+            {blocks.map((block, index) => (
+              <TextBlock key={block.id} index={index} block={block} />
+            ))}
+            {provided.placeholder}
           </div>
-        ))}
-      </div>
+        )}
+      </Droppable>
     )
   }
 }
 
-class Block extends Component {
+class TextBlock extends Component {
   state = { editing: false }
 
   render() {
-    const { id, content } = this.props.block
+    const {
+      index,
+      block: { id, content },
+    } = this.props
     const { editing } = this.state
 
     return (
-      <div onClick={() => this.setState({ editing: true })}>
-        {editing ? (
-          <Input
-            value={content}
-            onBlur={() => this.setState({ editing: false })}
-            autoFocus={true}
-          />
-        ) : (
-          <div>{content}</div>
+      <Draggable draggableId={`block-${id}`} index={index}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => this.setState({ editing: true })}
+            className={css`
+              padding: 16px;
+            `}
+          >
+            {editing ? (
+              <Input
+                value={content}
+                onBlur={() => this.setState({ editing: false })}
+                autoFocus={true}
+              />
+            ) : (
+              <div>{content}</div>
+            )}
+          </div>
         )}
-      </div>
+      </Draggable>
     )
   }
 }
 
-const Note = ({ id }) => (
-  <div>
-    <div
-      className={css`
-        background: linear-gradient(45deg, ${themes['green'].join(',')});
-        color: white;
-        padding: 32px;
-      `}
-    >
-      <Input type="text" autoFocus={true} placeholder="what's on your mind?" />
-    </div>
+class Note extends Component {
+  onDragEnd = result => {
+    if (!result.destination) {
+      return
+    }
+    console.log(result)
+  }
 
-    <div
-      className={css`
-        padding: 16px;
-      `}
-    >
-      <Outliner blocks={blocks} />
-    </div>
+  render() {
+    const { id } = this.props
 
-    <Actions />
-  </div>
-)
+    return (
+      <div>
+        <div
+          className={css`
+            background: linear-gradient(45deg, ${themes['green'].join(',')});
+            color: white;
+            padding: 32px;
+          `}
+        >
+          <Input type="text" autoFocus={true} placeholder="what's on your mind?" />
+        </div>
+
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <BlocksList blocks={blocks} />
+        </DragDropContext>
+
+        <Actions />
+      </div>
+    )
+  }
+}
 
 const Actions = () => (
   <div className={bottomBarStyle}>
