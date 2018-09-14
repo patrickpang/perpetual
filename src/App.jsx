@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Home from './pages/Home'
 import Note from './pages/Note'
 import Search from './pages/Search'
+import Settings from './pages/Settings'
 
 class App extends Component {
   render() {
@@ -12,6 +13,7 @@ class App extends Component {
         <Note path="/note" />
         <Note path="/note/:id" />
         <Search path="/search" />
+        <Settings path="/settings" />
         <Home default />
       </Router>
     )

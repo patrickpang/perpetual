@@ -31,7 +31,6 @@ class Search extends Component {
 
   componentDidMount() {
     getCards(db).then(response => {
-      console.log(response)
       this.setState({ cards: response.rows })
     })
   }

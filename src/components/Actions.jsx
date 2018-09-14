@@ -4,6 +4,7 @@ import { css } from 'react-emotion'
 import { bottomBarStyle } from '../helpers/layout'
 import Icon from './Icon'
 import Row from './Row'
+import BasicLink from './BasicLink'
 
 const Actions = () => (
   <Row className={bottomBarStyle}>
@@ -26,7 +27,9 @@ const Actions = () => (
         </div>{' '}
       </Row>
     </Link>
-    <Icon>cloud_queue</Icon>
+    <BasicLink to="/settings">
+      <Icon>cloud_queue</Icon>
+    </BasicLink>
     {/* <Icon>cloud_off</Icon> */}
   </Row>
 )

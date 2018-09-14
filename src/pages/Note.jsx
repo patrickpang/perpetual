@@ -8,7 +8,7 @@ import Row from '../components/Row'
 import Icon from '../components/Icon'
 import { themes, randomTheme } from '../helpers/theme'
 import Input from '../components/Input'
-import { saveCard, getCard } from '../database/cards'
+import { saveCard, getCard, deleteCard } from '../database/cards'
 import { db } from '../database/core'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
@@ -38,6 +38,8 @@ class Note extends Component {
         theme,
         mtime: new Date().getTime(),
       })
+    } else if (id && _rev) {
+      await deleteCard(db, id, _rev)
     }
   }
 
@@ -103,7 +105,7 @@ const BlocksList = ({ blocks, onContentChange }) => {
               key={block.id}
               index={index}
               block={block}
-              onBlockChange={block => mergeBlocks(blocks, block)}
+              onBlockChange={block => onContentChange(mergeBlocks(blocks, block))}
             />
           ))}
           <NewBlock onNewBlock={block => onContentChange([...blocks, block])} />
