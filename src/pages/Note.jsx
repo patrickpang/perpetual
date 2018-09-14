@@ -1,46 +1,119 @@
 import React, { Component } from 'react'
 import { css } from 'react-emotion'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import uuid from 'uuid/v4'
 
 import { bottomBarStyle } from '../helpers/layout'
 import Row from '../components/Row'
 import Icon from '../components/Icon'
-import themes from '../helpers/theme'
+import { themes, randomTheme } from '../helpers/theme'
 import Input from '../components/Input'
+import { saveCard, getCard } from '../database/cards'
+import { db } from '../database/core'
 
 // https://codesandbox.io/s/k260nyxq9v
 
-const blocks = [
-  { id: 4, type: 'text', content: 'COMP3230' },
-  { id: 5, type: 'text', content: 'COMP3278' },
-  { id: 6, type: 'text', content: 'COMP3117' },
-  { id: 7, type: 'text', content: 'COMP3297' },
-  { id: 8, type: 'text', content: 'MKTG2501' },
-]
+class Note extends Component {
+  state = { title: '', content: [], theme: randomTheme(), _rev: null }
 
-class BlocksList extends Component {
+  async componentDidMount() {
+    const { id } = this.props
+    if (id) {
+      const { title, content, theme, _rev } = await getCard(db, id)
+      this.setState({ title, content, theme, _rev })
+    }
+  }
+
+  async componentWillUnmount() {
+    const { id } = this.props
+    const { title, content, theme, _rev } = this.state
+    if (title.length > 0) {
+      await saveCard(db, {
+        _id: id || uuid(),
+        _rev,
+        title,
+        content,
+        theme,
+        mtime: new Date().getTime(),
+      })
+    }
+  }
+
+  changeTheme = () => this.setState({ theme: randomTheme() })
+
+  onDragEnd = result => {
+    if (!result.destination) {
+      return
+    }
+
+    const { content } = this.state
+    this.setState({
+      content: move(content, result.source.index, result.destination.index),
+    })
+  }
+
   render() {
-    const { blocks } = this.props
+    const { title, content, theme } = this.state
+
     return (
-      <Droppable droppableId="blocks">
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className={css`
-              padding: 16px;
-            `}
-          >
-            {blocks.map((block, index) => (
-              <TextBlock key={block.id} index={index} block={block} />
-            ))}
-            <NewItemBlock />
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      <div>
+        <div
+          onClick={this.changeTheme}
+          className={css`
+            background: linear-gradient(45deg, ${themes[theme].join(',')});
+            color: white;
+            padding: 32px;
+          `}
+        >
+          <Input
+            type="text"
+            value={title}
+            onChange={e => this.setState({ title: e.target.value })}
+            autoFocus={true}
+            placeholder="what's on your mind?"
+          />
+        </div>
+
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <BlocksList blocks={content} onContentChange={content => this.setState({ content })} />
+        </DragDropContext>
+
+        <Actions />
+      </div>
     )
   }
+}
+
+const BlocksList = ({ blocks, onContentChange }) => {
+  const mergeBlocks = (blocks, { id, content }) =>
+    blocks
+      .map(block => (block.id === id ? (content.length > 0 ? { ...block, content } : null) : block))
+      .filter(block => block)
+
+  return (
+    <Droppable droppableId="blocks">
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+          className={css`
+            padding: 16px;
+          `}
+        >
+          {blocks.map((block, index) => (
+            <TextBlock
+              key={block.id}
+              index={index}
+              block={block}
+              onBlockChange={block => mergeBlocks(blocks, block)}
+            />
+          ))}
+          <NewBlock onNewBlock={block => onContentChange([...blocks, block])} />
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  )
 }
 
 class TextBlock extends Component {
@@ -48,7 +121,12 @@ class TextBlock extends Component {
 
   handleSubmit = e => {
     const { content } = this.state
-    console.log(content)
+    const {
+      block: { id },
+      onBlockChange,
+    } = this.props
+
+    onBlockChange({ id, content })
     this.setState({ editing: false })
     e.preventDefault()
   }
@@ -78,7 +156,6 @@ class TextBlock extends Component {
                   value={content}
                   onChange={e => this.setState({ content: e.target.value })}
                   onBlur={this.handleSubmit}
-                  autoFocus={true}
                 />
               </form>
             ) : (
@@ -91,13 +168,17 @@ class TextBlock extends Component {
   }
 }
 
-class NewItemBlock extends Component {
+class NewBlock extends Component {
   state = { content: '' }
 
   handleSubmit = e => {
     const { content } = this.state
-    console.log(content)
-    e.preventDefault()
+    if (content.length > 0) {
+      const { onNewBlock } = this.props
+      onNewBlock({ id: uuid(), type: 'text', content })
+      this.setState({ content: '' })
+      e.preventDefault()
+    }
   }
 
   render() {
@@ -123,52 +204,30 @@ class NewItemBlock extends Component {
   }
 }
 
-class Note extends Component {
-  onDragEnd = result => {
-    if (!result.destination) {
-      return
-    }
-    console.log(result)
-  }
-
-  render() {
-    const { id } = this.props
-
-    return (
-      <div>
-        <div
-          className={css`
-            background: linear-gradient(45deg, ${themes['green'].join(',')});
-            color: white;
-            padding: 32px;
-          `}
-        >
-          <Input type="text" autoFocus={true} placeholder="what's on your mind?" />
-        </div>
-
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <BlocksList blocks={blocks} />
-        </DragDropContext>
-
-        <Actions />
-      </div>
-    )
-  }
-}
-
 const Actions = () => (
   <div className={bottomBarStyle}>
     <Row>
       <div
         className={css`
-          flex: 1;
+          width: 100%;
+          box-sizing: border-box;
+          display: flex;
+          justify-content: space-around;
         `}
       >
-        <Icon>delete</Icon>
+        <Icon>undo</Icon>
+        <Icon>redo</Icon>
       </div>
-      <Icon>offline_pin</Icon>
     </Row>
   </div>
 )
+
+const move = (list, startIndex, endIndex) => {
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
+
+  return result
+}
 
 export default Note

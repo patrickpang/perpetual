@@ -1,12 +1,9 @@
 import React from 'react'
-import Nav from '../components/Nav'
-import Card from '../components/Card'
 import { css } from 'react-emotion'
+import Actions from '../components/Actions'
+import Card from '../components/Card'
 import Main from '../components/Main'
-import Icon from '../components/Icon'
-import Row from '../components/Row'
-import { Link } from '@reach/router'
-import { bottomBarStyle } from '../helpers/layout'
+import Nav from '../components/Nav'
 
 const views = ['#everyday']
 
@@ -15,21 +12,21 @@ const cards = [
     id: 1,
     title: 'emotion',
     theme: 'green',
-    content:
+    preview:
       'Emotion is a performant and flexible CSS-in-JS library. Building on many other CSS-in-JS libraries, it allows you to style apps quickly with string or object styles. ',
   },
   {
     id: 2,
     title: 'pouchdb',
     theme: 'splendid',
-    content:
+    preview:
       'PouchDB is an open-source JavaScript database inspired by Apache CouchDB that is designed to run well within the browser. ',
   },
   {
     id: 3,
     title: 'react',
     theme: 'fresh',
-    content:
+    preview:
       'A JavaScript library for building user interfaces. Declarative. Component-Based. Learn Once, Write Anywhere.',
   },
 ]
@@ -71,6 +68,7 @@ const CardsRow = ({ cards }) => (
     {cards.map(card => (
       <Card
         card={card}
+        preview={card.preview}
         key={card.id}
         className={css`
           flex-shrink: 0;
@@ -80,21 +78,6 @@ const CardsRow = ({ cards }) => (
       />
     ))}
   </div>
-)
-
-const Actions = () => (
-  <Link to="/note" className={bottomBarStyle}>
-    <Row>
-      <Icon>add</Icon>
-      <div
-        className={css`
-          margin-left: 8px;
-        `}
-      >
-        write it down
-      </div>
-    </Row>
-  </Link>
 )
 
 export default Home
