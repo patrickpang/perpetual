@@ -34,6 +34,7 @@ class BlocksList extends Component {
             {blocks.map((block, index) => (
               <TextBlock key={block.id} index={index} block={block} />
             ))}
+            <NewItemBlock />
             {provided.placeholder}
           </div>
         )}
@@ -43,14 +44,21 @@ class BlocksList extends Component {
 }
 
 class TextBlock extends Component {
-  state = { editing: false }
+  state = { editing: false, content: this.props.block.content }
+
+  handleSubmit = e => {
+    const { content } = this.state
+    console.log(content)
+    this.setState({ editing: false })
+    e.preventDefault()
+  }
 
   render() {
     const {
       index,
-      block: { id, content },
+      block: { id },
     } = this.props
-    const { editing } = this.state
+    const { editing, content } = this.state
 
     return (
       <Draggable draggableId={`block-${id}`} index={index}>
@@ -65,17 +73,52 @@ class TextBlock extends Component {
             `}
           >
             {editing ? (
-              <Input
-                value={content}
-                onBlur={() => this.setState({ editing: false })}
-                autoFocus={true}
-              />
+              <form onSubmit={this.handleSubmit}>
+                <Input
+                  value={content}
+                  onChange={e => this.setState({ content: e.target.value })}
+                  onBlur={this.handleSubmit}
+                  autoFocus={true}
+                />
+              </form>
             ) : (
               <div>{content}</div>
             )}
           </div>
         )}
       </Draggable>
+    )
+  }
+}
+
+class NewItemBlock extends Component {
+  state = { content: '' }
+
+  handleSubmit = e => {
+    const { content } = this.state
+    console.log(content)
+    e.preventDefault()
+  }
+
+  render() {
+    const { content } = this.state
+
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <Input
+          value={content}
+          onChange={e => this.setState({ content: e.target.value })}
+          onBlur={this.handleSubmit}
+          placeholder="write it down"
+          className={css`
+            padding: 16px;
+
+            &::placeholder {
+              color: grey;
+            }
+          `}
+        />
+      </form>
     )
   }
 }
