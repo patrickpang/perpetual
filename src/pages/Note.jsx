@@ -10,7 +10,7 @@ import Icon from '../components/Icon'
 import { themes, randomTheme } from '../helpers/theme'
 import Input from '../components/Input'
 import { saveCard, getCard, deleteCard } from '../database/cards'
-import { db } from '../database/core'
+import { db, events } from '../database/core'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import BasicButton from '../components/BasicButton'
@@ -21,8 +21,8 @@ class Note extends Component {
   async componentDidMount() {
     const { id } = this.props
     if (id) {
-      const { title, content, theme, _rev } = await getCard(db, id)
-      this.setState({ title, content, theme, _rev, checksum: hash({ title, content, theme }) })
+      this.loadCard(id)
+      events.on('change', this.handleDocsChange)
     }
   }
 
@@ -43,6 +43,21 @@ class Note extends Component {
     } else if (id && _rev) {
       await deleteCard(db, id, _rev)
     }
+    events.removeListener('change', this.handleDocsChange)
+  }
+
+  handleDocsChange = docs => {
+    const { id } = this.props
+    if (docs.map(doc => doc._id).includes(id)) {
+      this.loadCard()
+    }
+  }
+
+  loadCard = () => {
+    const { id } = this.props
+    getCard(db, id).then(({ title, content, theme, _rev }) =>
+      this.setState({ title, content, theme, _rev, checksum: hash({ title, content, theme }) })
+    )
   }
 
   changeTheme = () => this.setState({ theme: randomTheme() })
@@ -186,8 +201,8 @@ class NewBlock extends Component {
       const { onNewBlock } = this.props
       onNewBlock({ id: uuid(), type: 'text', content })
       this.setState({ content: '' })
-      e.preventDefault()
     }
+    e.preventDefault()
   }
 
   render() {

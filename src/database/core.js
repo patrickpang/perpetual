@@ -1,4 +1,5 @@
 import PouchDB from 'pouchdb-browser'
+import EventEmitter from 'eventemitter3'
 import { getSettings } from '../helpers/settings'
 
 export function setup() {
@@ -7,12 +8,18 @@ export function setup() {
 
   const localDB = new PouchDB('cards')
   const remoteDB = new PouchDB(`${uri}/cards`)
-  localDB.sync(remoteDB, {
-    live: true,
-    retry: true,
-  })
+  localDB
+    .sync(remoteDB, {
+      live: true,
+      retry: true,
+    })
+    .on('change', data => {
+      events.emit('change', data.change.docs)
+    })
 
   return localDB
 }
 
 export const db = setup()
+
+export const events = new EventEmitter()

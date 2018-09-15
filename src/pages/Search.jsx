@@ -3,10 +3,10 @@ import { css } from 'react-emotion'
 import Actions from '../components/Actions'
 import Card from '../components/Card'
 import Layout from '../components/Layout'
+import Main from '../components/Main'
 import Nav from '../components/Nav'
 import { getCards } from '../database/cards'
-import { db } from '../database/core'
-import Main from '../components/Main'
+import { db, events } from '../database/core'
 
 const CardsGrid = ({ cards }) => (
   <div
@@ -30,6 +30,15 @@ class Search extends Component {
   state = { cards: [] }
 
   componentDidMount() {
+    this.loadCards()
+    events.on('change', this.loadCards)
+  }
+
+  componentWillUnmount() {
+    events.removeListener('change', this.loadCards)
+  }
+
+  loadCards = () => {
     getCards(db).then(response => {
       this.setState({ cards: response.rows })
     })
