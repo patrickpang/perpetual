@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Note from './pages/Note'
 import Search from './pages/Search'
 import Settings from './pages/Settings'
+import Agenda from './pages/Agenda'
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <Note path="/note" />
         <Note path="/note/:id" />
         <Search path="/search" />
+        <Agenda path="/agenda" />
         <Settings path="/settings" />
         <Home default />
       </Router>

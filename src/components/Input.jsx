@@ -9,6 +9,7 @@ const Input = styled('input')`
   color: inherit;
 
   &::placeholder {
+    font-size: inherit;
     color: inherit;
   }
 `

@@ -16,7 +16,7 @@ import Main from '../components/Main'
 import BasicButton from '../components/BasicButton'
 
 class Note extends Component {
-  state = { title: '', content: [], theme: randomTheme(), _rev: null, checksum: null }
+  state = { title: '', content: [], theme: randomTheme(), date: '', _rev: null, checksum: null }
 
   async componentDidMount() {
     const { id } = this.props
@@ -28,9 +28,9 @@ class Note extends Component {
 
   async componentWillUnmount() {
     const { id } = this.props
-    const { title, content, theme, _rev, checksum } = this.state
+    const { title, content, theme, date, _rev, checksum } = this.state
     if (title.length > 0) {
-      if (checksum !== hash({ title, content, theme })) {
+      if (checksum !== hash({ title, content, theme, date })) {
         await saveCard(db, {
           _id: id || uuid(),
           _rev,
@@ -38,6 +38,7 @@ class Note extends Component {
           content,
           theme,
           mtime: new Date().getTime(),
+          ...(date.length > 0 ? { date } : {}),
         })
       }
     } else if (id && _rev) {
@@ -59,13 +60,14 @@ class Note extends Component {
 
   loadCard = () => {
     const { id } = this.props
-    getCard(db, id).then(({ title, content, theme, _rev }) =>
+    getCard(db, id).then(({ title, content, theme, date = '', _rev }) =>
       this.setState({
         title,
         content,
         theme,
+        date,
         _rev,
-        checksum: hash({ title, content, theme }),
+        checksum: hash({ title, content, theme, date }),
       })
     )
   }
@@ -84,11 +86,11 @@ class Note extends Component {
   }
 
   render() {
-    const { title, content, theme } = this.state
+    const { title, content, theme, date } = this.state
 
     return (
       <Layout>
-        <Row
+        <div
           className={css`
             background: linear-gradient(45deg, ${themes[theme].join(',')});
             color: white;
@@ -101,16 +103,36 @@ class Note extends Component {
             onChange={e => this.setState({ title: e.target.value })}
             autoFocus={true}
             placeholder="what's on your mind?"
-          />
-          <BasicButton
-            onClick={this.changeTheme}
             className={css`
-              padding: 8px;
+              font-size: 120%;
+            `}
+          />
+
+          <Row
+            className={css`
+              margin-top: 8px;
             `}
           >
-            <Icon>color_lens</Icon>
-          </BasicButton>
-        </Row>
+            <Icon>today</Icon>
+            <Input
+              type="date"
+              className={css`
+                margin-left: 8px;
+                margin-right: 8px;
+              `}
+              value={date}
+              onChange={e => this.setState({ date: e.target.value })}
+            />
+            <BasicButton
+              onClick={this.changeTheme}
+              className={css`
+                padding: 8px;
+              `}
+            >
+              <Icon>color_lens</Icon>
+            </BasicButton>
+          </Row>
+        </div>
 
         <Main>
           <DragDropContext onDragEnd={this.onDragEnd}>
