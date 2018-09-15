@@ -19,14 +19,14 @@ const cards = [
   {
     id: 2,
     title: 'pouchdb',
-    theme: 'splendid',
+    theme: 'blue',
     preview:
       'PouchDB is an open-source JavaScript database inspired by Apache CouchDB that is designed to run well within the browser. ',
   },
   {
     id: 3,
     title: 'react',
-    theme: 'fresh',
+    theme: 'violet',
     preview:
       'A JavaScript library for building user interfaces. Declarative. Component-Based. Learn Once, Write Anywhere.',
   },

@@ -1,10 +1,11 @@
 import { sample } from 'lodash/fp'
 
 export const themes = {
-  green: ['#00b09b', '#96c93d'],
-  violet: ['#eaafc8', '#654ea3'],
-  splendid: ['#009fff', '#ec2f4b'],
-  fresh: ['#0575e6', '#00f260'],
+  green: ['#11998e', '#38ef7d'],
+  violet: ['#834d9b', '#d04ed6'],
+  orange: ['#fc4a1a', '#f7b733'],
+  blue: ['#5b86e5', '#36d1dc'],
+  grey: ['#2c3e50', '#bdc3c7'],
 }
 
 export const randomTheme = () => sample(Object.keys(themes))

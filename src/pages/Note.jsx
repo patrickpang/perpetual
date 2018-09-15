@@ -12,8 +12,7 @@ import { saveCard, getCard, deleteCard } from '../database/cards'
 import { db } from '../database/core'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
-
-// https://codesandbox.io/s/k260nyxq9v
+import BasicButton from '../components/BasicButton'
 
 class Note extends Component {
   state = { title: '', content: [], theme: randomTheme(), _rev: null }
@@ -61,8 +60,7 @@ class Note extends Component {
 
     return (
       <Layout>
-        <div
-          onClick={this.changeTheme}
+        <Row
           className={css`
             background: linear-gradient(45deg, ${themes[theme].join(',')});
             color: white;
@@ -76,7 +74,15 @@ class Note extends Component {
             autoFocus={true}
             placeholder="what's on your mind?"
           />
-        </div>
+          <BasicButton
+            onClick={this.changeTheme}
+            className={css`
+              padding: 8px;
+            `}
+          >
+            <Icon>color_lens</Icon>
+          </BasicButton>
+        </Row>
 
         <Main>
           <DragDropContext onDragEnd={this.onDragEnd}>
