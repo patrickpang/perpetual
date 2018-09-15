@@ -2,39 +2,51 @@ import React, { Component } from 'react'
 import { css } from 'react-emotion'
 import Input from '../components/Input'
 import Main from '../components/Main'
+import { getSettings, saveSettings } from '../helpers/settings'
+
+const Field = ({ id, value, onChange }) => (
+  <div
+    className={css`
+      padding: 16px;
+      margin-bottom: 16px;
+      background: whiteSmoke;
+    `}
+  >
+    <label htmlFor={id}>
+      <b>{id}</b>
+    </label>
+    <Input
+      id={id}
+      value={value}
+      onChange={onChange}
+      placeholder={id}
+      className={css`
+        margin-top: 16px;
+      `}
+    />
+  </div>
+)
 
 class Settings extends Component {
-  state = { address: window.localStorage.getItem('address') || 'localhost' }
+  state = { uri: 'localhost' }
+
+  componentDidMount() {
+    const { uri } = getSettings()
+    this.setState({ uri })
+  }
 
   componentWillUnmount() {
-    const { address } = this.state
-    window.localStorage.setItem('address', address || 'localhost')
+    const { uri } = this.state
+    saveSettings({ uri })
   }
 
   render() {
-    const { address } = this.state
+    const { uri } = this.state
     return (
       <Main>
         <h2>Settings</h2>
-        <div
-          className={css`
-            padding: 16px;
-            background: whiteSmoke;
-          `}
-        >
-          <label htmlFor="address">
-            <b>Address</b>
-          </label>
-          <Input
-            id="address"
-            value={address}
-            onChange={e => this.setState({ address: e.target.value })}
-            placeholder="Address"
-            className={css`
-              margin-top: 16px;
-            `}
-          />
-        </div>
+
+        <Field id="uri" value={uri} onChange={e => this.setState({ uri: e.target.value })} />
       </Main>
     )
   }
