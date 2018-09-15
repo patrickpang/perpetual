@@ -3,7 +3,7 @@ import { getSettings } from '../helpers/settings'
 
 export function setup() {
   // In CouchDB: 1. enable CORS 2. bind to 0.0.0.0 3. SSL
-  const { uri } = getSettings()
+  const { uri = 'http://localhost:5894' } = getSettings()
 
   const localDB = new PouchDB('cards')
   const remoteDB = new PouchDB(`${uri}/cards`)

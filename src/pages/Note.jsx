@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { css } from 'react-emotion'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import uuid from 'uuid/v4'
+import hash from 'object-hash'
 
 import { bottomBarStyle } from '../helpers/layout'
 import Row from '../components/Row'
@@ -15,28 +16,30 @@ import Main from '../components/Main'
 import BasicButton from '../components/BasicButton'
 
 class Note extends Component {
-  state = { title: '', content: [], theme: randomTheme(), _rev: null }
+  state = { title: '', content: [], theme: randomTheme(), _rev: null, checksum: null }
 
   async componentDidMount() {
     const { id } = this.props
     if (id) {
       const { title, content, theme, _rev } = await getCard(db, id)
-      this.setState({ title, content, theme, _rev })
+      this.setState({ title, content, theme, _rev, checksum: hash({ title, content, theme }) })
     }
   }
 
   async componentWillUnmount() {
     const { id } = this.props
-    const { title, content, theme, _rev } = this.state
+    const { title, content, theme, _rev, checksum } = this.state
     if (title.length > 0) {
-      await saveCard(db, {
-        _id: id || uuid(),
-        _rev,
-        title,
-        content,
-        theme,
-        mtime: new Date().getTime(),
-      })
+      if (checksum !== hash({ title, content, theme })) {
+        await saveCard(db, {
+          _id: id || uuid(),
+          _rev,
+          title,
+          content,
+          theme,
+          mtime: new Date().getTime(),
+        })
+      }
     } else if (id && _rev) {
       await deleteCard(db, id, _rev)
     }
