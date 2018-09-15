@@ -21,7 +21,7 @@ class Note extends Component {
   async componentDidMount() {
     const { id } = this.props
     if (id) {
-      this.loadCard(id)
+      this.loadCard()
       events.on('change', this.handleDocsChange)
     }
   }
@@ -46,18 +46,22 @@ class Note extends Component {
     events.removeListener('change', this.handleDocsChange)
   }
 
-  handleDocsChange = docs => {
+  handleDocsChange = change => {
     const { id } = this.props
-    if (docs.map(doc => doc._id).includes(id)) {
-      this.loadCard()
+    if (change.id === id) {
+      if (change.deleted) {
+        // TODO: prompt
+      } else {
+        this.loadCard()
+      }
     }
   }
 
   loadCard = () => {
     const { id } = this.props
-    getCard(db, id).then(({ title, content, theme, _rev }) =>
+    getCard(db, id).then(({ title, content, theme, _rev }) => {
       this.setState({ title, content, theme, _rev, checksum: hash({ title, content, theme }) })
-    )
+    })
   }
 
   changeTheme = () => this.setState({ theme: randomTheme() })
@@ -142,6 +146,16 @@ const BlocksList = ({ blocks, onContentChange }) => {
 
 class TextBlock extends Component {
   state = { editing: false, content: this.props.block.content }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.block.content !== state.content) {
+      return {
+        content: props.block.content,
+      }
+    } else {
+      return null
+    }
+  }
 
   handleSubmit = e => {
     const { content } = this.state

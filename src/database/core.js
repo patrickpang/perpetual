@@ -8,14 +8,15 @@ export function setup() {
 
   const localDB = new PouchDB('cards')
   const remoteDB = new PouchDB(`${uri}/cards`)
+
+  localDB.sync(remoteDB, {
+    live: true,
+    retry: true,
+  })
+
   localDB
-    .sync(remoteDB, {
-      live: true,
-      retry: true,
-    })
-    .on('change', data => {
-      events.emit('change', data.change.docs)
-    })
+    .changes({ since: 'now', live: true })
+    .on('change', change => events.emit('change', change))
 
   return localDB
 }
