@@ -6,9 +6,10 @@ import Nav from '../components/Nav'
 import { recentCards } from '../database/cards'
 import { db, events } from '../database/core'
 import CardsGrid from '../components/CardsGrid'
+import BasicInput from '../components/BasicInput'
 
 class Search extends Component {
-  state = { cards: [] }
+  state = { query: '', cards: [] }
 
   componentDidMount() {
     this.loadCards()
@@ -25,14 +26,23 @@ class Search extends Component {
     })
   }
 
+  handleQueryChange = e => this.setState({ query: e.target.value })
+
   render() {
-    const { cards } = this.state
+    const { query, cards } = this.state
     return (
       <Layout>
         <Nav />
 
         <Main>
-          <h2>Search</h2>
+          <h2>
+            <BasicInput
+              value={query}
+              onChange={this.handleQueryChange}
+              autoFocus={true}
+              placeholder="Search"
+            />
+          </h2>
           <CardsGrid cards={cards} />
         </Main>
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { css } from 'react-emotion'
-import Input from '../components/Input'
+import BasicInput from '../components/BasicInput'
 import Main from '../components/Main'
 import { getSettings, saveSettings } from '../helpers/settings'
 
@@ -15,7 +15,7 @@ const Field = ({ id, value, onChange }) => (
     <label htmlFor={id}>
       <b>{id}</b>
     </label>
-    <Input
+    <BasicInput
       id={id}
       value={value}
       onChange={onChange}

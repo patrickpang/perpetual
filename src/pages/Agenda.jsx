@@ -17,7 +17,9 @@ import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
 import { findCards } from '../database/cards'
-import { db } from '../database/core'
+import { db, events } from '../database/core'
+import Row from '../components/Row'
+import BasicButton from '../components/BasicButton'
 
 const Day = ({ day, selected, onClick }) => (
   <div
@@ -54,7 +56,16 @@ const Week = ({ selectedDate, onSelect }) => {
   const days = daysInWeek(selectedDate) // TODO: memoize?
   return (
     <div>
-      <h2>{format('yyyy MMM', selectedDate)}</h2>
+      <Row
+        className={css`
+          justify-content: space-between;
+        `}
+      >
+        <h2>{format('yyyy MMM', selectedDate)}</h2>
+        <BasicButton onClick={() => onSelect(startOfDay(new Date()))}>
+          <b>Today</b>
+        </BasicButton>
+      </Row>
       <Swipeable
         onSwipeRight={() => onSelect(subWeeks(1, selectedDate))}
         onSwipeLeft={() => onSelect(addWeeks(1, selectedDate))}
@@ -84,6 +95,11 @@ class Agenda extends Component {
 
   componentDidMount() {
     this.loadCards()
+    events.on('change', this.loadCards)
+  }
+
+  componentWillUnmount() {
+    events.removeListener('change', this.loadCards)
   }
 
   selectDate = date => this.setState({ selectedDate: date }, () => this.loadCards())

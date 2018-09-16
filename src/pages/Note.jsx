@@ -8,7 +8,7 @@ import { bottomBarStyle } from '../helpers/layout'
 import Row from '../components/Row'
 import Icon from '../components/Icon'
 import { themes, randomTheme } from '../helpers/theme'
-import Input from '../components/Input'
+import BasicInput from '../components/BasicInput'
 import { saveCard, getCard, deleteCard } from '../database/cards'
 import { db, events } from '../database/core'
 import Layout from '../components/Layout'
@@ -97,7 +97,7 @@ class Note extends Component {
             padding: 32px;
           `}
         >
-          <Input
+          <BasicInput
             type="text"
             value={title}
             onChange={e => this.setState({ title: e.target.value })}
@@ -114,7 +114,7 @@ class Note extends Component {
             `}
           >
             <Icon>today</Icon>
-            <Input
+            <BasicInput
               type="date"
               className={css`
                 margin-left: 8px;
@@ -208,7 +208,7 @@ class TextBlock extends Component {
           >
             {editing ? (
               <form onSubmit={this.handleSubmit}>
-                <Input
+                <BasicInput
                   value={content}
                   onChange={e => this.setState({ content: e.target.value })}
                   onBlur={this.handleSubmit}
@@ -242,7 +242,7 @@ class NewBlock extends Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <Input
+        <BasicInput
           value={content}
           onChange={e => this.setState({ content: e.target.value })}
           onBlur={this.handleSubmit}

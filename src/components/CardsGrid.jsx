@@ -6,7 +6,7 @@ const CardsGrid = ({ cards }) => (
   <div
     className={css`
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       grid-gap: 32px;
     `}
   >
