@@ -18,6 +18,7 @@
     "react-dom": "^16.5.1",
     "react-emotion": "^9.2.8",
     "react-scripts": "1.1.5",
+    "react-touch": "^0.4.4",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

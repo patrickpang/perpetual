@@ -1,14 +1,23 @@
+import {
+  addDays,
+  addWeeks,
+  format,
+  isEqual,
+  startOfDay,
+  startOfWeek,
+  subWeeks,
+} from 'date-fns/esm/fp'
+import { range } from 'lodash/fp'
 import React, { Component } from 'react'
+import { css } from 'react-emotion'
+import { Swipeable } from 'react-touch'
 import Actions from '../components/Actions'
+import CardsGrid from '../components/CardsGrid'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
-import { css } from 'react-emotion'
 import { findCards } from '../database/cards'
 import { db } from '../database/core'
-import CardsGrid from '../components/CardsGrid'
-import { format, startOfDay, startOfWeek, addDays, isEqual } from 'date-fns/esm/fp'
-import { range } from 'lodash/fp'
 
 const Day = ({ day, selected, onClick }) => (
   <div
@@ -46,21 +55,26 @@ const Week = ({ selectedDate, onSelect }) => {
   return (
     <div>
       <h2>{format('yyyy MMM', selectedDate)}</h2>
-      <div
-        className={css`
-          display: flex;
-          margin-bottom: 32px;
-        `}
+      <Swipeable
+        onSwipeRight={() => onSelect(subWeeks(1, selectedDate))}
+        onSwipeLeft={() => onSelect(addWeeks(1, selectedDate))}
       >
-        {days.map(day => (
-          <Day
-            key={day}
-            day={day}
-            selected={isEqual(selectedDate, day)}
-            onClick={() => onSelect(day)}
-          />
-        ))}
-      </div>
+        <div
+          className={css`
+            display: flex;
+            margin-bottom: 32px;
+          `}
+        >
+          {days.map(day => (
+            <Day
+              key={day}
+              day={day}
+              selected={isEqual(selectedDate, day)}
+              onClick={() => onSelect(day)}
+            />
+          ))}
+        </div>
+      </Swipeable>
     </div>
   )
 }
