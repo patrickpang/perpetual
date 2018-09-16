@@ -1,30 +1,11 @@
 import React, { Component } from 'react'
-import { css } from 'react-emotion'
 import Actions from '../components/Actions'
-import Card from '../components/Card'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
-import { getCards } from '../database/cards'
+import { recentCards } from '../database/cards'
 import { db, events } from '../database/core'
-
-const CardsGrid = ({ cards }) => (
-  <div
-    className={css`
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      grid-gap: 32px;
-    `}
-  >
-    {cards.map(({ id, doc: card }) => (
-      <Card
-        card={card}
-        key={id}
-        preview={card.content && card.content.length > 0 ? card.content[0].content : null}
-      />
-    ))}
-  </div>
-)
+import CardsGrid from '../components/CardsGrid'
 
 class Search extends Component {
   state = { cards: [] }
@@ -39,8 +20,8 @@ class Search extends Component {
   }
 
   loadCards = () => {
-    getCards(db).then(response => {
-      this.setState({ cards: response.rows })
+    recentCards(db).then(cards => {
+      this.setState({ cards })
     })
   }
 
