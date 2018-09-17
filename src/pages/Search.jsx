@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import Actions from '../components/Actions'
+import BasicInput from '../components/BasicInput'
+import CardsGrid from '../components/CardsGrid'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
-import { recentCards } from '../database/cards'
+import { recentCards, searchCards } from '../database/cards'
 import { db, events } from '../database/core'
-import CardsGrid from '../components/CardsGrid'
-import BasicInput from '../components/BasicInput'
+import { preprocessText } from '../helpers/text'
 
 class Search extends Component {
   state = { query: '', cards: [] }
@@ -26,7 +27,23 @@ class Search extends Component {
     })
   }
 
-  handleQueryChange = e => this.setState({ query: e.target.value })
+  searchCards = () => {
+    const { query } = this.state
+    console.log(preprocessText(query))
+    searchCards(db, preprocessText(query)).then(cards => {
+      this.setState({ cards })
+    })
+  }
+
+  handleSubmit = e => {
+    const { query } = this.state
+    if (query.length > 0) {
+      this.searchCards()
+    } else {
+      this.loadCards()
+    }
+    e.preventDefault()
+  }
 
   render() {
     const { query, cards } = this.state
@@ -36,12 +53,14 @@ class Search extends Component {
 
         <Main>
           <h2>
-            <BasicInput
-              value={query}
-              onChange={this.handleQueryChange}
-              autoFocus={true}
-              placeholder="Search"
-            />
+            <form onSubmit={this.handleSubmit}>
+              <BasicInput
+                value={query}
+                onChange={e => this.setState({ query: e.target.value })}
+                autoFocus={true}
+                placeholder="Search"
+              />
+            </form>
           </h2>
           <CardsGrid cards={cards} />
         </Main>

@@ -1,5 +1,6 @@
 import PouchDB from 'pouchdb-browser'
-import PouchDBFind from 'pouchdb-find'
+import find from 'pouchdb-find'
+import quickSearch from 'pouchdb-quick-search'
 import EventEmitter from 'eventemitter3'
 import { getSettings } from '../helpers/settings'
 import { createIndex } from './cards'
@@ -8,7 +9,9 @@ export function setup() {
   // In CouchDB: 1. enable CORS 2. bind to 0.0.0.0 3. SSL
   const { uri = 'http://localhost:5894' } = getSettings()
 
-  PouchDB.plugin(PouchDBFind)
+  PouchDB.plugin(find)
+  PouchDB.plugin(quickSearch)
+
   const localDB = new PouchDB('cards')
   const remoteDB = new PouchDB(`${uri}/cards`)
 

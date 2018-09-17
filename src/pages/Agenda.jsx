@@ -16,7 +16,7 @@ import CardsGrid from '../components/CardsGrid'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
-import { findCards } from '../database/cards'
+import { findCardsByDate } from '../database/cards'
 import { db, events } from '../database/core'
 import Row from '../components/Row'
 import BasicButton from '../components/BasicButton'
@@ -106,7 +106,7 @@ class Agenda extends Component {
 
   loadCards = () => {
     const { selectedDate } = this.state
-    findCards(db, { date: format('yyyy-MM-dd', selectedDate) }).then(cards =>
+    findCardsByDate(db, { date: format('yyyy-MM-dd', selectedDate) }).then(cards =>
       this.setState({ cards })
     )
   }

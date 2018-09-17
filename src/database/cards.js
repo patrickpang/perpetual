@@ -1,12 +1,16 @@
+import { preprocessText, extractText } from '../helpers/text'
+
 export const createIndex = db => {
   return Promise.all([
     db.createIndex({ index: { fields: ['date'] } }),
     db.createIndex({ index: { fields: ['mtime'] } }),
+    db.search({ fields: ['title', 'text'], build: true }),
   ])
 }
 
 export const saveCard = async (db, card) => {
-  return await db.put(card)
+  const text = preprocessText(extractText(card))
+  return await db.put({ ...card, text })
 }
 
 export const getCard = async (db, id) => {
@@ -23,6 +27,16 @@ export const recentCards = async db => {
     .then(result => result.docs)
 }
 
-export const findCards = async (db, { date }) => {
+export const findCardsByDate = async (db, { date }) => {
   return await db.find({ selector: { date } }).then(result => result.docs)
+}
+
+export const searchCards = async (db, query) => {
+  return await db
+    .search({
+      query,
+      fields: ['title', 'text'],
+      include_docs: true,
+    })
+    .then(result => result.rows.map(row => row.doc))
 }
