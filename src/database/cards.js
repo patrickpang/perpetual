@@ -5,7 +5,7 @@ export const createIndex = db => {
   return Promise.all([
     db.createIndex({ index: { fields: ['date'] } }),
     db.createIndex({ index: { fields: ['mtime'] } }),
-    db.search({ fields: ['titleText', 'text'], build: true }),
+    db.search({ fields: ['titleText', 'text', 'tags'], build: true }),
   ])
 }
 
@@ -34,11 +34,21 @@ export const findCardsByDate = async (db, { date }) => {
 }
 
 export const searchCards = async (db, query) => {
-  return await db
-    .search({
-      query,
-      fields: ['titleText', 'text'],
-      include_docs: true,
-    })
-    .then(result => result.rows.map(row => row.doc))
+  if (query.startsWith('#')) {
+    const tags = query
+      .trim()
+      .toLowerCase()
+      .split(' ')
+      .map(tag => tag.slice(1))
+
+    return await db.find({ selector: { tags: { $all: tags } } }).then(result => result.docs)
+  } else {
+    return await db
+      .search({
+        query: preprocessText(query),
+        fields: ['titleText', 'text'],
+        include_docs: true,
+      })
+      .then(result => result.rows.map(row => row.doc))
+  }
 }

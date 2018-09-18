@@ -16,7 +16,15 @@ import Main from '../components/Main'
 import BasicButton from '../components/BasicButton'
 
 class Note extends Component {
-  state = { title: '', content: [], theme: randomTheme(), date: '', _rev: null, checksum: null }
+  state = {
+    title: '',
+    content: [],
+    tagStr: '',
+    theme: randomTheme(),
+    date: '',
+    _rev: null,
+    checksum: null,
+  }
 
   async componentDidMount() {
     const { id } = this.props
@@ -28,9 +36,9 @@ class Note extends Component {
 
   async componentWillUnmount() {
     const { id } = this.props
-    const { title, content, theme, date, _rev, checksum } = this.state
+    const { title, content, theme, date, tagStr, _rev, checksum } = this.state
     if (title.length > 0) {
-      if (checksum !== hash({ title, content, theme, date })) {
+      if (checksum !== hash({ title, content, theme, date, tagStr })) {
         await saveCard(db, {
           _id: id || uuid(),
           _rev,
@@ -39,6 +47,14 @@ class Note extends Component {
           theme,
           mtime: new Date().getTime(),
           ...(date.length > 0 ? { date } : {}),
+          ...(tagStr.length > 0
+            ? {
+                tags: tagStr
+                  .trim()
+                  .toLowerCase()
+                  .split(' '),
+              }
+            : {}),
         })
       }
     } else if (id && _rev) {
@@ -60,16 +76,18 @@ class Note extends Component {
 
   loadCard = () => {
     const { id } = this.props
-    getCard(db, id).then(({ title, content, theme, date = '', _rev }) =>
+    getCard(db, id).then(({ title, content, theme, date = '', tags = [], _rev }) => {
+      const tagStr = tags.join(' ')
       this.setState({
         title,
         content,
         theme,
         date,
+        tagStr,
         _rev,
-        checksum: hash({ title, content, theme, date }),
+        checksum: hash({ title, content, theme, date, tagStr }),
       })
-    )
+    })
   }
 
   changeTheme = () => this.setState({ theme: randomTheme() })
@@ -86,7 +104,7 @@ class Note extends Component {
   }
 
   render() {
-    const { title, content, theme, date } = this.state
+    const { title, content, theme, date, tagStr } = this.state
 
     return (
       <Layout>
@@ -97,31 +115,16 @@ class Note extends Component {
             padding: 32px;
           `}
         >
-          <BasicInput
-            type="text"
-            value={title}
-            onChange={e => this.setState({ title: e.target.value })}
-            autoFocus={true}
-            placeholder="what's on your mind?"
-            className={css`
-              font-size: 120%;
-            `}
-          />
-
-          <Row
-            className={css`
-              margin-top: 8px;
-            `}
-          >
-            <Icon>today</Icon>
+          <Row>
             <BasicInput
-              type="date"
+              type="text"
+              value={title}
+              onChange={e => this.setState({ title: e.target.value })}
+              autoFocus={true}
+              placeholder="what's on your mind?"
               className={css`
-                margin-left: 8px;
-                margin-right: 8px;
+                font-size: 120%;
               `}
-              value={date}
-              onChange={e => this.setState({ date: e.target.value })}
             />
             <BasicButton
               onClick={this.changeTheme}
@@ -131,6 +134,41 @@ class Note extends Component {
             >
               <Icon>color_lens</Icon>
             </BasicButton>
+          </Row>
+
+          <Row
+            className={css`
+              margin-top: 8px;
+            `}
+          >
+            <Icon>today</Icon>
+            <BasicInput
+              type="date"
+              value={date}
+              onChange={e => this.setState({ date: e.target.value })}
+              className={css`
+                margin-left: 8px;
+                margin-right: 8px;
+              `}
+            />
+          </Row>
+
+          <Row
+            className={css`
+              margin-top: 8px;
+            `}
+          >
+            <Icon>label</Icon>
+            <BasicInput
+              type="text"
+              placeholder="tags"
+              className={css`
+                margin-left: 8px;
+                margin-right: 8px;
+              `}
+              value={tagStr}
+              onChange={e => this.setState({ tagStr: e.target.value })}
+            />
           </Row>
         </div>
 

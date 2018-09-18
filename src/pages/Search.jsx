@@ -7,7 +7,6 @@ import Main from '../components/Main'
 import Nav from '../components/Nav'
 import { recentCards, searchCards } from '../database/cards'
 import { db, events } from '../database/core'
-import { preprocessText } from '../helpers/text'
 
 class Search extends Component {
   state = { query: '', cards: [] }
@@ -29,7 +28,7 @@ class Search extends Component {
 
   searchCards = () => {
     const { query } = this.state
-    searchCards(db, preprocessText(query)).then(cards => {
+    searchCards(db, query).then(cards => {
       this.setState({ cards })
     })
   }
