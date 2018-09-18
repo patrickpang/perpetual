@@ -13,13 +13,13 @@ const cardStyle = theme => css`
   padding: 24px;
 `
 
-const Card = ({ card: { _id, title, theme }, preview, className }) => (
+const Card = ({ card: { _id, title, theme, content }, className }) => (
   <Link
     to={`/note/${_id}`}
     className={className ? cardStyle(theme) + ' ' + className : cardStyle(theme)}
   >
     <b>{title}</b>
-    <p>{preview}</p>
+    <p>{content && content.length > 0 ? content[0].content : null}</p>
   </Link>
 )
 

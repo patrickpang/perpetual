@@ -106,9 +106,7 @@ class Agenda extends Component {
 
   loadCards = () => {
     const { selectedDate } = this.state
-    findCardsByDate(db, { date: format('yyyy-MM-dd', selectedDate) }).then(cards =>
-      this.setState({ cards })
-    )
+    findCardsByDate(db, format('yyyy-MM-dd', selectedDate)).then(cards => this.setState({ cards }))
   }
 
   render() {

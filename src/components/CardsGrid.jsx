@@ -11,11 +11,7 @@ const CardsGrid = ({ cards }) => (
     `}
   >
     {cards.map(card => (
-      <Card
-        card={card}
-        key={card._id}
-        preview={card.content && card.content.length > 0 ? card.content[0].content : null}
-      />
+      <Card card={card} key={card._id} />
     ))}
   </div>
 )

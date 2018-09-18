@@ -29,7 +29,7 @@ export const recentCards = async db => {
     .then(result => result.docs)
 }
 
-export const findCardsByDate = async (db, { date }) => {
+export const findCardsByDate = async (db, date) => {
   return await db.find({ selector: { date } }).then(result => result.docs)
 }
 
