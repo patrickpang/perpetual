@@ -29,7 +29,6 @@ class Search extends Component {
 
   searchCards = () => {
     const { query } = this.state
-    console.log(preprocessText(query))
     searchCards(db, preprocessText(query)).then(cards => {
       this.setState({ cards })
     })
