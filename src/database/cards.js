@@ -1,4 +1,5 @@
 import { preprocessText, extractText } from '../helpers/text'
+import { countBy } from 'lodash/fp'
 
 export const createIndex = db => {
   // extract text: recentCards(db).then(cards => cards.forEach(card => saveCard(db, card)))
@@ -31,6 +32,13 @@ export const recentCards = async db => {
 
 export const findCardsByDate = async (db, date) => {
   return await db.find({ selector: { date } }).then(result => result.docs)
+}
+
+export const countCardsInDateRange = async (db, startDate, endDate) => {
+  return await db
+    .find({ selector: { date: { $gte: startDate, $lte: endDate } }, fields: ['_id', 'date'] })
+    .then(result => result.docs)
+    .then(docs => countBy('date', docs))
 }
 
 export const searchCards = async (db, query) => {

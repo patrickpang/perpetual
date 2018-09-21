@@ -1,6 +1,7 @@
 import {
   addDays,
   addWeeks,
+  endOfWeek,
   format,
   isEqual,
   startOfDay,
@@ -12,16 +13,17 @@ import React, { Component } from 'react'
 import { css } from 'react-emotion'
 import { Swipeable } from 'react-touch'
 import Actions from '../components/Actions'
+import BasicButton from '../components/BasicButton'
 import CardsGrid from '../components/CardsGrid'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import Nav from '../components/Nav'
-import { findCardsByDate } from '../database/cards'
-import { db, events } from '../database/core'
 import Row from '../components/Row'
-import BasicButton from '../components/BasicButton'
+import { countCardsInDateRange, findCardsByDate } from '../database/cards'
+import { db, events } from '../database/core'
+import Badge from '../components/Badge'
 
-const Day = ({ day, selected, onClick }) => (
+const Day = ({ day, selected, count, onClick }) => (
   <div
     onClick={onClick}
     className={css`
@@ -33,17 +35,12 @@ const Day = ({ day, selected, onClick }) => (
     <div
       className={css`
         color: grey;
+        margin-bottom: 8px;
       `}
     >
       {format('EEEEE', day)}
     </div>
-    <div
-      className={css`
-        padding-top: 8px;
-      `}
-    >
-      {format('d', day)}
-    </div>
+    <Badge number={count}>{format('d', day)}</Badge>
   </div>
 )
 
@@ -52,7 +49,7 @@ const daysInWeek = date => {
   return range(0, 7).map(offset => addDays(offset, startDay))
 }
 
-const Week = ({ selectedDate, onSelect }) => {
+const Week = ({ selectedDate, cardsCount, onDateChange, onRangeChange }) => {
   const days = daysInWeek(selectedDate) // TODO: memoize?
   return (
     <div>
@@ -62,13 +59,27 @@ const Week = ({ selectedDate, onSelect }) => {
         `}
       >
         <h2>{format('yyyy MMM', selectedDate)}</h2>
-        <BasicButton onClick={() => onSelect(startOfDay(new Date()))}>
+        <BasicButton
+          onClick={() => {
+            const newSelectedDate = new Date()
+            onDateChange(startOfDay(newSelectedDate))
+            onRangeChange(startOfWeek(newSelectedDate), endOfWeek(newSelectedDate))
+          }}
+        >
           <b>Today</b>
         </BasicButton>
       </Row>
       <Swipeable
-        onSwipeRight={() => onSelect(subWeeks(1, selectedDate))}
-        onSwipeLeft={() => onSelect(addWeeks(1, selectedDate))}
+        onSwipeRight={() => {
+          const newSelectedDate = subWeeks(1, selectedDate)
+          onDateChange(newSelectedDate)
+          onRangeChange(startOfWeek(newSelectedDate), endOfWeek(newSelectedDate))
+        }}
+        onSwipeLeft={() => {
+          const newSelectedDate = addWeeks(1, selectedDate)
+          onDateChange(newSelectedDate)
+          onRangeChange(startOfWeek(newSelectedDate), endOfWeek(newSelectedDate))
+        }}
       >
         <div
           className={css`
@@ -81,7 +92,8 @@ const Week = ({ selectedDate, onSelect }) => {
               key={day}
               day={day}
               selected={isEqual(selectedDate, day)}
-              onClick={() => onSelect(day)}
+              count={cardsCount[defaultDateFormat(day)]}
+              onClick={() => onDateChange(day)}
             />
           ))}
         </div>
@@ -91,32 +103,49 @@ const Week = ({ selectedDate, onSelect }) => {
 }
 
 class Agenda extends Component {
-  state = { selectedDate: startOfDay(new Date()), cards: [] }
+  state = { selectedDate: startOfDay(new Date()), cards: [], cardsCount: {} }
 
   componentDidMount() {
-    this.loadCards()
-    events.on('change', this.loadCards)
+    this.reload()
+    events.on('change', this.reload)
   }
 
   componentWillUnmount() {
-    events.removeListener('change', this.loadCards)
+    events.removeListener('change', this.reload)
   }
 
   selectDate = date => this.setState({ selectedDate: date }, () => this.loadCards())
 
+  reload = () => {
+    const { selectedDate } = this.state
+    this.loadCards()
+    this.loadCount(startOfWeek(selectedDate), endOfWeek(selectedDate))
+  }
+
   loadCards = () => {
     const { selectedDate } = this.state
-    findCardsByDate(db, format('yyyy-MM-dd', selectedDate)).then(cards => this.setState({ cards }))
+    findCardsByDate(db, defaultDateFormat(selectedDate)).then(cards => this.setState({ cards }))
+  }
+
+  loadCount = (startDate, endDate) => {
+    countCardsInDateRange(db, defaultDateFormat(startDate), defaultDateFormat(endDate)).then(
+      cardsCount => this.setState({ cardsCount })
+    )
   }
 
   render() {
-    const { selectedDate, cards } = this.state
+    const { selectedDate, cards, cardsCount } = this.state
     return (
       <Layout>
         <Nav />
 
         <Main>
-          <Week selectedDate={selectedDate} onSelect={this.selectDate} />
+          <Week
+            selectedDate={selectedDate}
+            cardsCount={cardsCount}
+            onDateChange={this.selectDate}
+            onRangeChange={this.loadCount}
+          />
           <CardsGrid cards={cards} />
         </Main>
 
@@ -125,5 +154,7 @@ class Agenda extends Component {
     )
   }
 }
+
+const defaultDateFormat = format('yyyy-MM-dd')
 
 export default Agenda
