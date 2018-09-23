@@ -8,8 +8,13 @@ import Nav from '../components/Nav'
 import { findCardsByDate, searchCards } from '../database/cards'
 import { db } from '../database/core'
 import { defaultDateFormat } from '../helpers/dates'
+import styled from 'react-emotion'
 
-const views = ['#everyday']
+const views = ['#everyday', '#recent', '#someday']
+
+const View = styled('div')`
+  margin-bottom: 48px;
+`
 
 class Home extends Component {
   state = { cards: { today: [], views: {} } }
@@ -37,15 +42,15 @@ class Home extends Component {
         <Nav />
 
         <Main>
-          <div>
+          <View>
             <h2>Today</h2>
             {cards.today && <CardsGrid cards={cards.today} />}
-          </div>
+          </View>
           {views.map(view => (
-            <div key={view}>
+            <View key={view}>
               <h2>{view}</h2>
               {cards.views[view] && <CardsGrid cards={cards.views[view]} />}
-            </div>
+            </View>
           ))}
         </Main>
 
