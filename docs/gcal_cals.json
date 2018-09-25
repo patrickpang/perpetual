@@ -1,0 +1,99 @@
+{
+  "kind": "calendar#calendarList",
+  "etag": "\"p32sdfum3t75tq0g\"",
+  "nextSyncToken": "CLjX-sPpy90CEhlwYXRyaWNrcGFuZzE5OTdAZ21haWwuY29t",
+  "items": [
+    {
+      "kind": "calendar#calendarListEntry",
+      "etag": "\"1536803963569000\"",
+      "id": "patrickpang1997@gmail.com",
+      "summary": "Life",
+      "timeZone": "Asia/Hong_Kong",
+      "colorId": "14",
+      "backgroundColor": "#9fe1e7",
+      "foregroundColor": "#000000",
+      "selected": true,
+      "accessRole": "owner",
+      "defaultReminders": [],
+      "notificationSettings": {
+        "notifications": [
+          {
+            "type": "eventCreation",
+            "method": "sms"
+          }
+        ]
+      },
+      "primary": true,
+      "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["eventHangout"]
+      }
+    },
+    {
+      "kind": "calendar#calendarListEntry",
+      "etag": "\"1536803963569000\"",
+      "id": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+      "summary": "Courses",
+      "timeZone": "Asia/Hong_Kong",
+      "colorId": "24",
+      "backgroundColor": "#a47ae2",
+      "foregroundColor": "#000000",
+      "selected": true,
+      "accessRole": "owner",
+      "defaultReminders": [],
+      "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["eventHangout"]
+      }
+    },
+    {
+      "kind": "calendar#calendarListEntry",
+      "etag": "\"1536803963569000\"",
+      "id": "bffokcrq3ohp42e8ik6e36fl2jnp3c43@import.calendar.google.com",
+      "summary": "http://moodle.hku.hk/calendar/export_execute.php?userid=137347&authtoken=b64d00ba80062090d346d52c8de3328a729d79cd&preset_what=all&preset_time=custom",
+      "timeZone": "UTC",
+      "summaryOverride": "Moodle",
+      "colorId": "18",
+      "backgroundColor": "#b99aff",
+      "foregroundColor": "#000000",
+      "selected": true,
+      "accessRole": "reader",
+      "defaultReminders": [],
+      "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["eventHangout"]
+      }
+    },
+    {
+      "kind": "calendar#calendarListEntry",
+      "etag": "\"1536803963569000\"",
+      "id": "#contacts@group.v.calendar.google.com",
+      "summary": "Contacts",
+      "timeZone": "Asia/Hong_Kong",
+      "summaryOverride": "Contacts",
+      "colorId": "18",
+      "backgroundColor": "#b99aff",
+      "foregroundColor": "#000000",
+      "selected": true,
+      "accessRole": "reader",
+      "defaultReminders": [],
+      "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["eventHangout"]
+      }
+    },
+    {
+      "kind": "calendar#calendarListEntry",
+      "etag": "\"1536803963569000\"",
+      "id": "zh.hong_kong#holiday@group.v.calendar.google.com",
+      "summary": "Holidays in Hong Kong",
+      "timeZone": "Asia/Hong_Kong",
+      "summaryOverride": "Holidays",
+      "colorId": "11",
+      "backgroundColor": "#fbe983",
+      "foregroundColor": "#000000",
+      "selected": true,
+      "accessRole": "reader",
+      "defaultReminders": [],
+      "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["eventHangout"]
+      }
+    }
+  ]
+}

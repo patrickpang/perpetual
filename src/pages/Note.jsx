@@ -14,8 +14,11 @@ import { db, events } from '../database/core'
 import Layout from '../components/Layout'
 import Main from '../components/Main'
 import BasicButton from '../components/BasicButton'
+import Card from '../components/Card'
 
-class Note extends Component {
+const Note = ({ id }) => <NoteEditor key={id} id={id} /> // refresh on props changes
+
+class NoteEditor extends Component {
   state = {
     title: '',
     content: [],
@@ -120,7 +123,6 @@ class Note extends Component {
               type="text"
               value={title}
               onChange={e => this.setState({ title: e.target.value })}
-              autoFocus={true}
               placeholder="what's on your mind?"
               className={css`
                 font-size: 120%;
@@ -174,7 +176,11 @@ class Note extends Component {
 
         <Main>
           <DragDropContext onDragEnd={this.onDragEnd}>
-            <BlocksList blocks={content} onContentChange={content => this.setState({ content })} />
+            <BlocksList
+              blocks={content}
+              parentTheme={theme}
+              onContentChange={content => this.setState({ content })}
+            />
           </DragDropContext>
         </Main>
 
@@ -184,24 +190,47 @@ class Note extends Component {
   }
 }
 
-const BlocksList = ({ blocks, onContentChange }) => {
-  const mergeBlocks = (blocks, { id, content }) =>
+const BlocksList = ({ blocks, parentTheme, onContentChange }) => {
+  const mergeBlocks = (blocks, changedBlock) =>
     blocks
-      .map(block => (block.id === id ? (content.length > 0 ? { ...block, content } : null) : block))
+      .map(
+        block =>
+          block.id === changedBlock.id
+            ? changedBlock.content.length > 0
+              ? { ...block, ...changedBlock }
+              : null
+            : block
+      )
       .filter(block => block)
 
   return (
     <Droppable droppableId="blocks">
       {(provided, snapshot) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          {blocks.map((block, index) => (
-            <TextBlock
-              key={`${block.id} ${block.content}`} // assume block.content is string
-              index={index}
-              block={block}
-              onBlockChange={block => onContentChange(mergeBlocks(blocks, block))}
-            />
-          ))}
+          {blocks.map((block, index) => {
+            switch (block.type) {
+              case 'card':
+                return (
+                  <CardBlock
+                    key={`${block.id} ${block.content}`}
+                    index={index}
+                    block={block}
+                    onBlockChange={block => onContentChange(mergeBlocks(blocks, block))}
+                  />
+                )
+              case 'text':
+              default:
+                return (
+                  <TextBlock
+                    key={`${block.id} ${block.content}`} // assume block.content is string
+                    index={index}
+                    block={block}
+                    parentTheme={parentTheme}
+                    onBlockChange={block => onContentChange(mergeBlocks(blocks, block))}
+                  />
+                )
+            }
+          })}
           <NewBlock onNewBlock={block => onContentChange([...blocks, block])} />
           {provided.placeholder}
         </div>
@@ -223,6 +252,30 @@ class TextBlock extends Component {
     onBlockChange({ id, content })
     this.setState({ editing: false })
     e.preventDefault()
+  }
+
+  clear = () => {
+    const {
+      block: { id },
+      onBlockChange,
+    } = this.props
+
+    onBlockChange({ id, content: '' })
+    this.setState({ editing: false })
+  }
+
+  convertIntoCard = () => {
+    const {
+      block: { id },
+      onBlockChange,
+      parentTheme,
+    } = this.props
+    const { content } = this.state
+    const cardId = uuid()
+
+    saveCard(db, { _id: cardId, title: content, content: [], theme: parentTheme }).then(() => {
+      onBlockChange({ id, type: 'card', content: cardId })
+    })
   }
 
   render() {
@@ -248,9 +301,37 @@ class TextBlock extends Component {
               <form onSubmit={this.handleSubmit}>
                 <BasicInput
                   value={content}
+                  autoFocus={true}
                   onChange={e => this.setState({ content: e.target.value })}
                   onBlur={this.handleSubmit}
                 />
+                <div
+                  className={css`
+                    margin: 8px 0;
+                    text-align: right;
+                    color: grey;
+                  `}
+                >
+                  <BasicButton
+                    type="button"
+                    onClick={this.convertIntoCard}
+                    className={css`
+                      padding: 8px;
+                    `}
+                  >
+                    <Icon>open_in_browser</Icon>
+                  </BasicButton>
+
+                  <BasicButton
+                    type="button"
+                    onClick={this.clear}
+                    className={css`
+                      padding: 8px;
+                    `}
+                  >
+                    <Icon>delete</Icon>
+                  </BasicButton>
+                </div>
               </form>
             ) : (
               <div>{content}</div>
@@ -259,6 +340,56 @@ class TextBlock extends Component {
         )}
       </Draggable>
     )
+  }
+}
+
+class CardBlock extends Component {
+  state = { card: null }
+
+  componentDidMount() {
+    const {
+      block: { id, content: cardId },
+      onBlockChange,
+    } = this.props
+
+    getCard(db, cardId)
+      .then(card => this.setState({ card }))
+      .catch(err => {
+        if (err.status === 404) {
+          onBlockChange({ id, content: '' })
+        } else {
+          throw err
+        }
+      })
+  }
+
+  render() {
+    const {
+      index,
+      block: { id },
+    } = this.props
+    const { card } = this.state
+
+    if (card) {
+      return (
+        <Draggable draggableId={`block-${id}`} index={index}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              className={css`
+                padding: 16px 0;
+              `}
+            >
+              <Card card={card} key={card._id} />
+            </div>
+          )}
+        </Draggable>
+      )
+    } else {
+      return <div>Loading</div>
+    }
   }
 }
 
@@ -311,6 +442,8 @@ const Actions = () => (
       >
         <Icon>undo</Icon>
         <Icon>redo</Icon>
+        <Icon>cloud_upload</Icon>
+        <Icon>library_add</Icon>
       </div>
     </Row>
   </div>

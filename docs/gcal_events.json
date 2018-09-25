@@ -1,0 +1,193 @@
+{
+  "kind": "calendar#events",
+  "etag": "\"p33cahh5fpb4dq0g\"",
+  "summary": "Courses",
+  "updated": "2018-09-20T02:54:57.447Z",
+  "timeZone": "Asia/Hong_Kong",
+  "accessRole": "owner",
+  "defaultReminders": [],
+  "nextSyncToken": "CNioxK_KyN0CENioxK_KyN0CGAU=",
+  "items": [
+    {
+      "kind": "calendar#event",
+      "etag": "\"3072948301426000\"",
+      "id": "_6co36d9j6sojgcpm5ko30c1k",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=XzZjbzM2ZDlqNnNvamdjcG01a28zMGMxa18yMDE4MDkwM1QwNjMwMDBaIHMycXQ1M2tva3VpcXBldTljdTkxa2I2b3BrQGc",
+      "created": "2018-09-09T14:19:00.000Z",
+      "updated": "2018-09-09T06:22:30.713Z",
+      "summary": "COMP3230(A)",
+      "description": "Central Podium, Centennial",
+      "location": "CPD-LG.08",
+      "creator": {
+        "email": "patrickpang1997@gmail.com",
+        "displayName": "Patrick Pang"
+      },
+      "organizer": {
+        "email": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+        "displayName": "Courses",
+        "self": true
+      },
+      "start": {
+        "dateTime": "2018-09-03T14:30:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "end": {
+        "dateTime": "2018-09-03T15:20:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "recurrence": ["RRULE:FREQ=WEEKLY;COUNT=4;BYDAY=MO"],
+      "transparency": "transparent",
+      "iCalUID": "3035371836-0004",
+      "sequence": 0,
+      "reminders": {
+        "useDefault": true
+      }
+    },
+    {
+      "kind": "calendar#event",
+      "etag": "\"3072948301426000\"",
+      "id": "_6co36d9j6sojgcpm5ko30chm",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=XzZjbzM2ZDlqNnNvamdjcG01a28zMGNobV8yMDE4MDkwM1QwMTMwMDBaIHMycXQ1M2tva3VpcXBldTljdTkxa2I2b3BrQGc",
+      "created": "2018-09-09T14:19:00.000Z",
+      "updated": "2018-09-09T06:22:30.713Z",
+      "summary": "COMP3278(A)",
+      "description": "Central Podium, Centennial",
+      "location": "CPD-LG.18",
+      "creator": {
+        "email": "patrickpang1997@gmail.com",
+        "displayName": "Patrick Pang"
+      },
+      "organizer": {
+        "email": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+        "displayName": "Courses",
+        "self": true
+      },
+      "start": {
+        "dateTime": "2018-09-03T09:30:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "end": {
+        "dateTime": "2018-09-03T11:20:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "recurrence": ["RRULE:FREQ=WEEKLY;COUNT=4;BYDAY=MO"],
+      "transparency": "transparent",
+      "iCalUID": "3035371836-0026",
+      "sequence": 0,
+      "reminders": {
+        "useDefault": true
+      }
+    },
+    {
+      "kind": "calendar#event",
+      "etag": "\"3072948301426000\"",
+      "id": "_6co36d9j6sojgcpm5ko30cph",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=XzZjbzM2ZDlqNnNvamdjcG01a28zMGNwaF8yMDE4MDkwM1QwOTMwMDBaIHMycXQ1M2tva3VpcXBldTljdTkxa2I2b3BrQGc",
+      "created": "2018-09-09T14:19:00.000Z",
+      "updated": "2018-09-09T06:22:30.713Z",
+      "summary": "COMP3297(A)",
+      "description": "Central Podium, Centennial",
+      "location": "CPD-LG.09",
+      "creator": {
+        "email": "patrickpang1997@gmail.com",
+        "displayName": "Patrick Pang"
+      },
+      "organizer": {
+        "email": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+        "displayName": "Courses",
+        "self": true
+      },
+      "start": {
+        "dateTime": "2018-09-03T17:30:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "end": {
+        "dateTime": "2018-09-03T18:20:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "recurrence": ["RRULE:FREQ=WEEKLY;COUNT=4;BYDAY=MO"],
+      "transparency": "transparent",
+      "iCalUID": "3035371836-0031",
+      "sequence": 0,
+      "reminders": {
+        "useDefault": true
+      }
+    },
+    {
+      "kind": "calendar#event",
+      "etag": "\"3072948301426000\"",
+      "id": "_6co36d9j6sojgcpm5ko30dpg",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=XzZjbzM2ZDlqNnNvamdjcG01a28zMGRwZ18yMDE4MDkxN1QwNzMwMDBaIHMycXQ1M2tva3VpcXBldTljdTkxa2I2b3BrQGc",
+      "created": "2018-09-09T14:19:00.000Z",
+      "updated": "2018-09-09T06:22:30.713Z",
+      "summary": "MKTG2501(G)",
+      "description": "Chong Yuet Ming Physics",
+      "location": "CYPP2",
+      "creator": {
+        "email": "patrickpang1997@gmail.com",
+        "displayName": "Patrick Pang"
+      },
+      "organizer": {
+        "email": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+        "displayName": "Courses",
+        "self": true
+      },
+      "start": {
+        "dateTime": "2018-09-17T15:30:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "end": {
+        "dateTime": "2018-09-17T17:20:00+08:00",
+        "timeZone": "Asia/Hong_Kong"
+      },
+      "recurrence": ["RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO"],
+      "transparency": "transparent",
+      "iCalUID": "3035371836-0070",
+      "sequence": 0,
+      "reminders": {
+        "useDefault": true
+      }
+    },
+    {
+      "kind": "calendar#event",
+      "etag": "\"3072953081596000\"",
+      "id": "_6co36d9j6sojgcpm5ko30chm_20180924T013000Z",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=XzZjbzM2ZDlqNnNvamdjcG01a28zMGNobV8yMDE4MDkyNFQwMTMwMDBaIHMycXQ1M2tva3VpcXBldTljdTkxa2I2b3BrQGc",
+      "created": "2018-09-09T14:19:00.000Z",
+      "updated": "2018-09-09T07:02:20.798Z",
+      "summary": "COMP3278(A) Tutorial",
+      "description": "Central Podium, Centennial",
+      "location": "CPD-LG.18",
+      "creator": {
+        "email": "patrickpang1997@gmail.com",
+        "displayName": "Patrick Pang"
+      },
+      "organizer": {
+        "email": "s2qt53kokuiqpeu9cu91kb6opk@group.calendar.google.com",
+        "displayName": "Courses",
+        "self": true
+      },
+      "start": {
+        "dateTime": "2018-09-24T09:30:00+08:00"
+      },
+      "end": {
+        "dateTime": "2018-09-24T11:20:00+08:00"
+      },
+      "recurringEventId": "_6co36d9j6sojgcpm5ko30chm",
+      "originalStartTime": {
+        "dateTime": "2018-09-24T09:30:00+08:00"
+      },
+      "transparency": "transparent",
+      "iCalUID": "3035371836-0026",
+      "sequence": 0,
+      "reminders": {
+        "useDefault": true
+      }
+    }
+  ]
+}
